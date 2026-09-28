@@ -1,11 +1,11 @@
 # 소상공인 상가(상권)정보 서울 원본 302MB.
 # GitHub는 파일 하나에 100MB 제한이 있어 올릴 수 없다. 공개 자료라 다시 받을 수 있고,
-# 집계 결과는 2_데이터/가공/자치구별_지표.csv에 남는다.
-2_데이터/원본/소상공인시장진흥공단_상가(상권)정보_서울_202606.csv
+# 집계 결과는 금천구/데이터/자치구별_지표.csv에 남는다.
+금천구/원본/소상공인시장진흥공단_상가(상권)정보_서울_202606.csv
+
+# 금천구 인구 좌표 테스트 데이터 114MB. GitHub 100MB 제한으로 제외.
+금천구/DONGGEUN/Geumcheon_Test_Population_with_Coordinates.csv
 
 # 주피터, 파이썬 임시 폴더
 .ipynb_checkpoints/
 __pycache__/
-
-# 금천구 인구 좌표 테스트 데이터 114MB. GitHub 100MB 제한으로 제외.
-DONGGEUN/Geumcheon_Test_Population_with_Coordinates.csv
