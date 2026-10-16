@@ -6,6 +6,13 @@
 # 금천구 인구 좌표 테스트 데이터 114MB. GitHub 100MB 제한으로 제외.
 금천구/DONGGEUN/Geumcheon_Test_Population_with_Coordinates.csv
 
+# Seoul.ipynb 입력 중 100MB를 넘는 두 파일. 팀 공유 폴더에서 따로 받는다.
+2_데이터/모형입력/SeoulNetwork.csv
+2_데이터/모형입력/Seoul_Test_Population.csv
+
+# 안심구역 유동인구 형식의 모의 자료. 3_분석/make_mock_flow_population.py로 다시 만든다.
+2_데이터/모의/
+
 # 주피터, 파이썬 임시 폴더
 .ipynb_checkpoints/
 __pycache__/
