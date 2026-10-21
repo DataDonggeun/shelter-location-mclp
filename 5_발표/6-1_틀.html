@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>신규 쉼터 15곳</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* 1920x1080 캔버스. 사용자의 3-2 장(어느 곳에 우선적으로 설치를 해야 할까) 형식을 따른다 */
+:root {
+  --main: #223a65;
+  --bar: #2a2d33;
+  --ink: #26282c;
+  --sub: #5d6676;
+  --muted: #8a93a3;
+  --pill: #dde6f3;
+  --edge: #7fbcf0;
+  --red: #e8262b;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #2b2a28; overflow: hidden; }
+body { font-family: "Pretendard", "Malgun Gothic", sans-serif; -webkit-font-smoothing: antialiased; }
+
+.stage { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: center; }
+.slide {
+  position: absolute; inset: 0; overflow: hidden;
+  background:
+    radial-gradient(1350px 780px at 30% 0%, #ffffff 0%, rgba(255,255,255,0) 70%),
+    radial-gradient(1050px 900px at 100% 100%, #8ec5f4 0%, rgba(142,197,244,0) 70%),
+    linear-gradient(120deg, #e3f0fd 0%, #f4f9ff 40%, #b4d8f8 100%);
+}
+.bar { position: absolute; left: 120px; top: 102px; width: 12px; height: 62px; background: var(--bar); }
+.ttl { position: absolute; left: 148px; top: 88px; margin: 0; font-size: 60px; font-weight: 700; letter-spacing: -0.02em; color: var(--title, #2a2d33); }
+
+.card {
+  position: absolute; left: 120px; top: 228px; width: 1680px; height: 780px;
+  background: #fff; border: 3px solid var(--edge); border-radius: 40px;
+  padding: 30px 56px 34px; display: flex; flex-direction: column;
+}
+.cond { align-self: flex-end; font-size: 20px; color: var(--muted); }
+
+.cols { flex: 1; min-height: 0; display: flex; gap: 44px; margin-top: 4px; }
+.col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; }
+.pill { height: 64px; padding: 0 40px; border-radius: 32px; background: var(--pill); color: var(--main); font-size: 30px; display: flex; align-items: center; }
+.map { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; margin-top: 14px; }
+.map img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+
+.mt { width: 400px; display: grid; grid-template-columns: 1fr auto; row-gap: 8px; font-size: 22px; color: var(--sub); margin-top: 8px; }
+.mt b { justify-self: end; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; position: relative; }
+.mt em { font-style: normal; font-size: 17px; color: var(--muted); font-weight: 400; margin-left: 6px; }
+.mt b.best { color: var(--red); }
+/* 손그림 동그라미 */
+.mt b.best svg { position: absolute; left: -26px; top: -12px; width: calc(100% + 52px); height: calc(100% + 24px); overflow: visible; pointer-events: none; }
+.mt b.best path { fill: none; stroke: var(--red); stroke-width: 3.2; stroke-linecap: round; }
+
+.say { margin-top: 14px; font-size: 24px; font-weight: 600; color: var(--ink); }
+.say span { color: var(--red); }
+
+.foot { margin-top: 22px; font-size: 26px; line-height: 1.6; color: var(--ink); word-break: keep-all; }
+.foot p { margin: 0; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <section class="slide">
+    <div class="bar"></div><h1 class="ttl">6-1. 신규 쉼터 15곳은 어디에 둘까</h1>
+    <div class="card">
+      <div class="cond">기존 쉼터 96곳 유지 · 후보 148곳 중 15곳 추가 · 보행거리 219m · 기존 배치 22.8% / 407m / 4.0%</div>
+      <div class="cols">
+        <div class="col">
+          <div class="pill">p-median</div>
+          <div class="map"><img src="../4_결과/안심구역_반출_261016/02_선정입지_p-median_p15.png" alt=""></div>
+          <div class="mt">
+            <span>커버율</span><b>29.3%<em>+6.5%p</em></b>
+            <span>평균 보행거리</span><b class="best">342m<em>−65m</em><svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M40 10 C95 0 175 4 192 32 C206 58 150 78 96 75 C42 72 6 60 8 38 C10 18 48 6 104 5"/></svg></b>
+            <span>최저 동 커버율</span><b>7.7%</b>
+          </div>
+          <div class="say">평균 보행거리 <span>가장 짧음</span></div>
+        </div>
+        <div class="col">
+          <div class="pill">MCLP</div>
+          <div class="map"><img src="../4_결과/안심구역_반출_261016/02_선정입지_MCLP_p15.png" alt=""></div>
+          <div class="mt">
+            <span>커버율</span><b class="best">30.3%<em>+7.5%p</em><svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M36 12 C90 -1 178 6 193 34 C204 60 146 79 92 75 C38 71 4 57 9 36 C14 17 52 7 108 6"/></svg></b>
+            <span>평균 보행거리</span><b>357m<em>−50m</em></b>
+            <span>최저 동 커버율</span><b>5.8%</b>
+          </div>
+          <div class="say">커버율 <span>가장 높음</span></div>
+        </div>
+        <div class="col">
+          <div class="pill">형평성 MCLP</div>
+          <div class="map"><img src="../4_결과/안심구역_반출_261016/02_선정입지_형평성MCLP_p15.png" alt=""></div>
+          <div class="mt">
+            <span>커버율</span><b>28.8%<em>+6.0%p</em></b>
+            <span>평균 보행거리</span><b>362m<em>−45m</em></b>
+            <span>최저 동 커버율</span><b class="best">14.7%<svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M44 9 C100 0 180 8 194 35 C206 62 140 79 88 74 C36 70 3 55 10 35 C16 16 56 6 110 7"/></svg></b>
+          </div>
+          <div class="say">취약 동 커버율 <span>가장 높음</span></div>
+        </div>
+      </div>
+      <div class="foot">
+        <p>같은 15곳을 추가해도 모형의 목표에 따라 고르는 위치와 좋아지는 지표가 다르다.</p>
+        <p>따라서 정책 목표를 먼저 정한 뒤 그에 맞는 모형의 결과를 검토한다.</p>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  document.getElementById("stage").style.transform = `translate(-50%, -50%) scale(${s})`;
+}
+addEventListener("resize", fit); fit();
+</script>
+</body>
+</html>

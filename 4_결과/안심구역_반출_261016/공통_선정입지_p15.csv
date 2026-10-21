@@ -1,0 +1,28 @@
+﻿candidate_id,시설명,시설유형,MCLP,형평성 MCLP,p-median,모형수
+C008,강남상가아파트,경로당,True,True,True,3
+C024,대림아크로빌아파트,경로당,True,True,True,3
+C040,동부센트레빌아파트,경로당,True,True,True,3
+C058,롯데캐슬리베아파트,경로당,True,True,True,3
+C080,수서7단지아파트,경로당,True,True,True,3
+C112,청담,경로당,True,True,True,3
+C033,대치포스코더샵,경로당,False,True,True,2
+C048,래미안대치팰리스2단지아파트,경로당,True,True,False,2
+C072,선경아파트,경로당,True,False,True,2
+C086,쌍용제1차아파트,경로당,False,True,True,2
+C104,우성3차아파트,경로당,True,False,True,2
+C143,논현정보도서관,도서관(작은도서관),True,True,False,2
+C030,대치르엘경로당,경로당,False,True,False,1
+C034,대치현대아파트,경로당,False,True,False,1
+C063,미도아파트,경로당,False,True,False,1
+C067,삼성파크아파트,경로당,False,False,True,1
+C076,세심,경로당,False,False,True,1
+C085,신현대아파트,경로당,False,False,True,1
+C100,역삼중앙,경로당,True,False,False,1
+C103,우성1차아파트,경로당,False,True,False,1
+C113,청담래미안로이뷰아파트,경로당,True,False,False,1
+C117,청담자이아파트,경로당,False,False,True,1
+C121,타워팰리스2차아파트,경로당,True,False,False,1
+C126,학수정,경로당,True,False,False,1
+C127,한마음,경로당,False,True,False,1
+C134,한아름아파트,경로당,True,False,False,1
+C147,일원1동 작은도서관,도서관(작은도서관),False,False,True,1

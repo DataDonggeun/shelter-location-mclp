@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>데이터 및 EDA</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* 1920x1080 캔버스. 방법론 장(2-1, 2-2 ...)과 같은 틀: 왼쪽 막대 + 번호 제목, 하늘색 테두리 흰 카드, 알약 라벨 */
+:root {
+  --main: #223a65;
+  --bar: #2a2d33;
+  --sub: #5d6676;
+  --muted: #8a93a3;
+  --rule: #d5dbe5;
+  --pill: #dde6f3;
+  --edge: #7fbcf0;
+  --frame: #e1e6ee;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #2b2a28; overflow: hidden; }
+body { font-family: "Pretendard", "Malgun Gothic", sans-serif; -webkit-font-smoothing: antialiased; }
+
+.stage { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: center; }
+.slide {
+  position: absolute; inset: 0; overflow: hidden; display: none;
+  background:
+    radial-gradient(1350px 780px at 30% 0%, #ffffff 0%, rgba(255,255,255,0) 70%),
+    radial-gradient(1050px 900px at 100% 100%, #8ec5f4 0%, rgba(142,197,244,0) 70%),
+    linear-gradient(120deg, #e3f0fd 0%, #f4f9ff 40%, #b4d8f8 100%);
+}
+.slide.on { display: block; }
+
+.bar { position: absolute; left: 100px; top: 80px; width: 12px; height: 66px; background: var(--bar); }
+.ttl { position: absolute; left: 130px; top: 68px; margin: 0; font-size: 64px; font-weight: 800; letter-spacing: -0.02em; color: var(--main); }
+
+.card {
+  position: absolute; left: 100px; top: 190px; width: 1720px; height: 830px;
+  background: rgba(255,255,255,0.92); border: 3px solid var(--edge); border-radius: 40px;
+  padding: 44px 48px; display: flex; gap: 40px;
+}
+.col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.col.w60 { flex: 0 0 980px; }
+
+.pill {
+  align-self: flex-start; height: 64px; padding: 0 34px; border-radius: 32px;
+  background: var(--pill); color: var(--main); font-size: 30px; font-weight: 600;
+  display: flex; align-items: center; margin-bottom: 20px;
+}
+.fig { flex: 1; min-height: 0; background: #fff; border: 2px solid var(--frame); border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: center; }
+.fig img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.fig + .pill { margin-top: 28px; }
+
+.txt { margin-top: 22px; font-size: 26px; line-height: 1.6; color: var(--sub); word-break: keep-all; }
+.txt p { margin: 0 0 10px; }
+.txt b { color: var(--main); }
+.todo { font-size: 22px; color: var(--muted); }
+
+/* 3. 개요 장: 두 카드 */
+.half {
+  position: absolute; top: 190px; width: 830px; height: 830px;
+  background: rgba(255,255,255,0.92); border: 3px solid var(--edge); border-radius: 40px; padding: 44px 48px;
+}
+.half h2 { margin: 0 0 18px; font-size: 44px; font-weight: 700; color: var(--main); display: flex; align-items: center; gap: 18px; }
+.half h2 i { width: 56px; height: 56px; border-radius: 14px; border: 2px dashed var(--edge); font-style: normal; font-size: 14px; color: var(--muted); display: flex; align-items: center; justify-content: center; }
+.item { display: grid; grid-template-columns: 76px 1fr; gap: 26px; align-items: center; padding: 44px 0; border-bottom: 2px solid var(--rule); }
+.item:last-child { border-bottom: 0; }
+.badge { width: 76px; height: 76px; border-radius: 50%; background: var(--pill); color: var(--main); font-size: 32px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.item h3 { margin: 0 0 6px; font-size: 32px; font-weight: 700; color: var(--main); }
+.item p { margin: 0; font-size: 24px; line-height: 1.5; color: var(--sub); word-break: keep-all; }
+
+/* 3-1 비교 줄 */
+.cmp { flex: 0 0 auto; display: flex; align-items: center; gap: 48px; padding: 20px 32px; border-radius: 20px; background: #eef3fa; }
+.cmp-k { font-size: 24px; font-weight: 700; color: var(--main); }
+.cmp-v { font-size: 24px; color: var(--sub); white-space: nowrap; }
+.cmp-v span { font-weight: 600; color: var(--main); margin-right: 8px; }
+.cmp-v b { color: var(--main); }
+.note-src { position: absolute; left: 100px; top: 1034px; font-size: 18px; color: #5d7290; }
+
+.pg { position: absolute; right: 100px; bottom: 26px; font-size: 20px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- 10쪽: 3. 데이터 및 EDA 개요 -->
+  <section class="slide">
+    <div class="bar"></div><h1 class="ttl">3. 데이터 및 EDA</h1>
+    <div class="half" style="left:100px">
+      <h2><i>아이콘</i>사용 데이터</h2>
+      <div class="item"><div class="badge">I</div><div><h3>수요 · 비교 자료</h3><p>50m 격자 성·연령별 유동인구 중 60대 이상 남녀 합 / 비교용 고령 거주인구</p></div></div>
+      <div class="item"><div class="badge">II</div><div><h3>시설 자료</h3><p>기존 무더위쉼터 4,092곳 / 추가 지정 후보: 경로당, 도서관, 보건소, 주민센터</p></div></div>
+      <div class="item"><div class="badge">III</div><div><h3>공간 자료</h3><p>서울시 보행 네트워크, 자치구·행정동 경계</p></div></div>
+      <p class="todo" style="margin:8px 0 0">출처 보완: 제공기관, 기준일, 7~9월 집계 방식, 인구 단위, 거주인구 자료명</p>
+    </div>
+    <div class="half" style="left:990px">
+      <h2><i>아이콘</i>전처리</h2>
+      <div class="item"><div class="badge">I</div><div><h3>좌표계 통일</h3><p>좌표계를 맞춘 뒤 분석 범위의 수요와 시설만 추출</p></div></div>
+      <div class="item"><div class="badge">II</div><div><h3>수요 합산</h3><p>같은 노드·행정동에 속한 격자 수요를 합산</p></div></div>
+      <div class="item"><div class="badge">III</div><div><h3>후보 정리</h3><p>같은 노드의 후보는 하나만 남기고, 기존 쉼터와 같은 노드의 후보는 제외</p></div></div>
+    </div>
+    <div class="pg">10</div>
+  </section>
+
+  <!-- 11쪽: 고령 유동인구와 거주인구 분포 -->
+  <section class="slide">
+    <div class="bar"></div><h1 class="ttl">3-1. 서울시 고령 거주인구와 유동인구 분포</h1>
+    <div class="card" style="flex-direction:column; gap:26px">
+      <div style="flex:1; min-height:0; display:flex; gap:40px">
+        <div class="col">
+          <div class="pill">60세 이상 거주인구</div>
+          <div class="fig"><img src="../4_결과/서울_EDA_거주인구/01_고령거주인구_지도.png" alt=""></div>
+          <div class="txt" style="font-size:24px"><p>송파구 16.8만, 강서구 15.5만, 노원구 14.3만 순. 강남구는 13.0만으로 6위.</p></div>
+        </div>
+        <div class="col">
+          <div class="pill">60대 이상 유동인구</div>
+          <div class="fig"><img src="../4_결과/안심구역_반출_261016/02_고령유동인구_지도.png" alt=""></div>
+          <div class="txt" style="font-size:24px"><p>강남구가 약 94.8만으로 가장 많다. 송파구 79.6만, 서초구 73.4만 순.</p></div>
+        </div>
+      </div>
+      <div class="cmp">
+        <div class="cmp-k">서울 고령 인구 중 비중</div>
+        <div class="cmp-v"><span>강남구</span> 거주 5.0% (6위) → 유동 <b>7.7% (1위)</b></div>
+        <div class="cmp-v"><span>중구</span> 1.4% → 4.2%</div>
+        <div class="cmp-v"><span>은평구</span> 5.3% → 3.6%</div>
+      </div>
+    </div>
+    <div class="note-src">두 지도 모두 500m 구획 순위 5분위 / 거주인구: 행정동 60세 이상 주민등록인구(2026.9.30)를 100m 격자 총인구 비율로 나눈 추정값 / 유동인구 집계 기간·단위 보완</div>
+    <div class="pg">11</div>
+  </section>
+
+  <!-- 12쪽: 시간대별 유동인구와 운영시간 -->
+  <section class="slide">
+    <div class="bar"></div><h1 class="ttl">3-2. 시간대별 고령 유동인구와 쉼터 운영시간</h1>
+    <div class="card">
+      <div class="col w60">
+        <div class="pill">시간대별 비교</div>
+        <div class="fig"><img src="../4_결과/안심구역_반출_261016/05_시간대별_유동인구와_운영시간.png" alt=""></div>
+      </div>
+      <div class="col">
+        <div class="pill">확인한 점</div>
+        <div class="txt" style="margin-top:6px">
+          <p>고령 유동인구는 18~19시에 하루 중 가장 많다.</p>
+          <p>쉼터는 10~15시에 거의 모두 열지만, 18시 이후 여는 곳은 5% 안팎이다.</p>
+          <p class="todo">설명 보완: 폭염 시간대 12~17시 기준 해석</p>
+        </div>
+      </div>
+    </div>
+    <div class="pg">12</div>
+  </section>
+
+  <!-- 13쪽: 자치구별 쉼터 공급 -->
+  <section class="slide">
+    <div class="bar"></div><h1 class="ttl">3-3. 자치구별 쉼터 공급</h1>
+    <div class="card">
+      <div class="col">
+        <div class="pill">고령 유동인구 1만 명당 쉼터 수</div>
+        <div class="fig"><img src="../4_결과/안심구역_반출_261016/01_고령1만명당_쉼터수.png" alt=""></div>
+        <div class="txt"><p>강남구 <b>1.0곳</b>, 서울 평균 3.3곳.</p></div>
+      </div>
+      <div class="col">
+        <div class="pill">수요와 공급</div>
+        <div class="fig"><img src="../4_결과/안심구역_반출_261016/01_수요와_공급_산점도.png" alt=""></div>
+        <div class="txt"><p>강남구는 고령 유동인구가 가장 많지만 쉼터 수는 평균선 아래다.</p></div>
+      </div>
+    </div>
+    <div class="pg">13</div>
+  </section>
+
+  <!-- 14쪽: 기존 쉼터와 후보시설 유형 -->
+  <section class="slide">
+    <div class="bar"></div><h1 class="ttl">3-4. 기존 쉼터와 후보시설 유형</h1>
+    <div class="card">
+      <div class="col w60">
+        <div class="pill">기존 쉼터 유형</div>
+        <div class="fig"><img src="../4_결과/안심구역_반출_261016/07_쉼터_유형.png" alt=""></div>
+        <div class="pill">후보시설 유형</div>
+        <div class="fig" style="flex:0 0 250px"><img src="../4_결과/안심구역_반출_261016/09_후보시설_유형.png" alt=""></div>
+      </div>
+      <div class="col">
+        <div class="pill">확인한 점</div>
+        <div class="txt" style="margin-top:6px">
+          <p>기존 쉼터는 회원이용시설이 69.4%다.</p>
+          <p>후보시설은 경로당이 <b>81.5%</b>다. p = 15에서 세 모형 모두 15곳 중 14곳을 경로당으로 골랐다.</p>
+          <p class="todo">설명 보완: 유형별 출입·이용 조건 / 쉼터 유형 분류를 현황 장(특정계층이용시설 2,900곳)과 통일</p>
+        </div>
+      </div>
+    </div>
+    <div class="pg">14</div>
+  </section>
+
+</div>
+<script>
+const slides = [...document.querySelectorAll(".slide")];
+let cur = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1)) || 1) - 1));
+function show(i) { slides.forEach((s, k) => s.classList.toggle("on", k === i)); cur = i; }
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  document.getElementById("stage").style.transform = `translate(-50%, -50%) scale(${s})`;
+}
+addEventListener("keydown", e => {
+  if (e.key === "ArrowRight" || e.key === " ") show(Math.min(cur + 1, slides.length - 1));
+  if (e.key === "ArrowLeft") show(Math.max(cur - 1, 0));
+});
+addEventListener("click", () => show((cur + 1) % slides.length));
+addEventListener("resize", fit); fit(); show(cur);
+</script>
+</body>
+</html>

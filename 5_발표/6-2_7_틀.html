@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>결과와 시사점</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* 1920x1080 캔버스. 6-1_틀.html(기준 장)과 같은 틀. 방향키나 클릭으로 넘긴다 */
+:root {
+  --main: #223a65;
+  --bar: #2a2d33;
+  --ink: #26282c;
+  --sub: #5d6676;
+  --muted: #8a93a3;
+  --pill: #dde6f3;
+  --edge: #7fbcf0;
+  --rule: #e3e8f0;
+  --red: #e8262b;
+  --blue: #2a78d6;
+  --orange: #eb6834;
+  --aqua: #1baf7a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #2b2a28; overflow: hidden; }
+body { font-family: "Pretendard", "Malgun Gothic", sans-serif; -webkit-font-smoothing: antialiased; }
+
+.stage { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: center; }
+.slide {
+  position: absolute; inset: 0; overflow: hidden; display: none;
+  background:
+    radial-gradient(1350px 780px at 30% 0%, #ffffff 0%, rgba(255,255,255,0) 70%),
+    radial-gradient(1050px 900px at 100% 100%, #8ec5f4 0%, rgba(142,197,244,0) 70%),
+    linear-gradient(120deg, #e3f0fd 0%, #f4f9ff 40%, #b4d8f8 100%);
+}
+.slide.on { display: block; }
+.bar { position: absolute; left: 120px; top: 102px; width: 12px; height: 62px; background: var(--bar); }
+.ttl { position: absolute; left: 148px; top: 88px; margin: 0; font-size: 60px; font-weight: 700; letter-spacing: -0.02em; color: var(--main); }
+
+.card {
+  position: absolute; left: 120px; top: 228px; width: 1680px; height: 780px;
+  background: #fff; border: 3px solid var(--edge); border-radius: 40px;
+  padding: 30px 56px 34px; display: flex; flex-direction: column;
+}
+.cond { align-self: flex-end; font-size: 20px; color: var(--muted); }
+
+.cols { flex: 1; min-height: 0; display: flex; gap: 44px; margin-top: 4px; }
+.col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; }
+.col.wide { flex: 0 0 860px; }
+.pill { flex: 0 0 auto; height: 64px; padding: 0 40px; border-radius: 32px; background: var(--pill); color: var(--main); font-size: 30px; display: flex; align-items: center; gap: 14px; }
+.pill i, .mt i { width: 16px; height: 16px; border-radius: 50%; display: inline-block; flex: 0 0 auto; }
+.map { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; margin-top: 14px; }
+.map img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+
+.mt { width: 400px; display: grid; grid-template-columns: 1fr auto; row-gap: 8px; font-size: 22px; color: var(--sub); margin-top: 8px; }
+.mt > span { display: flex; align-items: center; gap: 10px; }
+.mt i { width: 12px; height: 12px; }
+.mt b { justify-self: end; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; position: relative; }
+.mt em { font-style: normal; font-size: 17px; color: var(--muted); font-weight: 400; margin-left: 6px; }
+.mt b.best { color: var(--red); }
+/* 손그림 동그라미 */
+b.best svg { position: absolute; left: -26px; top: -12px; width: calc(100% + 52px); height: calc(100% + 24px); overflow: visible; pointer-events: none; }
+b.best path { fill: none; stroke: var(--red); stroke-width: 3.2; stroke-linecap: round; }
+
+.say { margin-top: 14px; font-size: 24px; font-weight: 600; color: var(--ink); }
+.say span { color: var(--red); }
+
+/* 6-2 공통 시설 이름 */
+.sub { margin-top: 30px; font-size: 22px; color: var(--sub); align-self: stretch; padding-bottom: 10px; border-bottom: 2px solid var(--rule); }
+.names { margin: 14px 0 0; padding: 0; list-style: none; align-self: stretch; display: grid; grid-template-columns: 1fr 1fr; row-gap: 10px; column-gap: 20px; font-size: 22px; color: var(--main); }
+.names li span { color: var(--muted); font-size: 18px; margin-left: 6px; }
+.memo { margin-top: 18px; align-self: stretch; font-size: 21px; line-height: 1.6; color: var(--sub); word-break: keep-all; }
+.memo p { margin: 0; }
+
+/* 6-1(공통) 로드뷰 */
+.tally { margin-top: 18px; display: flex; gap: 34px; font-size: 22px; color: var(--sub); }
+.tally b { font-weight: 700; color: var(--ink); margin-left: 6px; position: relative; font-variant-numeric: tabular-nums; }
+.tally b.best { color: var(--red); margin-left: 16px; }
+.tally b.best svg { left: -14px; width: calc(100% + 28px); }
+.shots { margin-top: 22px; align-self: stretch; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 16px; }
+.shots figure { margin: 0; min-width: 0; }
+.ph { position: relative; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; background: #eef2f7; border: 2px dashed #c9d3e1; display: flex; align-items: center; justify-content: center; }
+.ph span { font-size: 18px; color: var(--muted); }
+.ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ph:has(img) { border: none; }
+.ph i { position: absolute; left: 10px; top: 10px; width: 32px; height: 32px; border-radius: 50%; background: #a83c12; border: 2px solid #fff; color: #fff; font-style: normal; font-weight: 700; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+.shots figcaption { margin-top: 8px; font-size: 19px; color: var(--main); line-height: 1.35; word-break: keep-all; }
+.shots small { display: block; font-size: 16px; color: var(--muted); }
+.shots small em { font-style: normal; color: var(--red); font-weight: 600; }
+
+/* 6-4 앞 단계 선정지 유지 표 */
+.keep { margin-top: 26px; align-self: stretch; display: grid; grid-template-columns: 170px repeat(5, 1fr); font-size: 22px; color: var(--sub); }
+.keep > * { padding: 12px 0; border-bottom: 2px solid var(--rule); text-align: center; font-variant-numeric: tabular-nums; }
+.keep .h { font-size: 18px; color: var(--muted); }
+.keep .m { text-align: left; display: flex; align-items: center; gap: 10px; }
+.keep .m i { width: 12px; height: 12px; border-radius: 50%; }
+.keep b { font-weight: 700; color: var(--ink); }
+.keep b.lo { color: var(--muted); font-weight: 400; }
+
+/* 7 시사점 */
+.duo { flex: 1; min-height: 0; width: 100%; display: flex; flex-direction: column; justify-content: center; gap: 30px; margin-top: 14px; }
+.blk { display: flex; flex-direction: column; align-items: center; }
+.blk .cap { align-self: flex-start; margin-left: 60px; font-size: 21px; color: var(--sub); margin-bottom: 6px; }
+.blk img { width: 580px; display: block; }
+.pair { flex: 1; min-height: 0; width: 100%; display: flex; gap: 18px; }
+.pair .map { flex: 1; }
+.map.crop { overflow: hidden; justify-content: flex-start; }
+.map.crop img { max-width: none; width: 200%; max-height: none; margin-left: -100%; }
+.goal { margin-top: 34px; align-self: stretch; display: grid; grid-template-columns: 190px 220px 1fr; font-size: 24px; color: var(--sub); }
+.goal > * { padding: 20px 0; border-bottom: 2px solid var(--rule); display: flex; align-items: center; gap: 10px; }
+.goal > .v { justify-content: flex-end; padding-right: 30px; }
+.goal i { width: 12px; height: 12px; border-radius: 50%; }
+.goal .md { color: var(--main); font-weight: 600; }
+.goal b { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; position: relative; }
+.goal b.best { color: var(--red); }
+.goal em { font-style: normal; font-size: 18px; color: var(--muted); font-weight: 400; margin-left: 6px; }
+.body { margin-top: 30px; align-self: stretch; font-size: 24px; line-height: 1.65; color: var(--ink); word-break: keep-all; }
+.body p { margin: 0 0 8px; }
+.body .q { color: var(--muted); font-size: 20px; }
+.push { flex: 1; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- 20쪽 -->
+  <section class="slide">
+    <div class="bar"></div><h1 class="ttl">6-3. 세 모형이 함께 고른 위치</h1>
+    <div class="card">
+      <div class="cols">
+        <div class="col" style="flex:0 0 760px">
+          <div class="pill">신규 15곳 선정 결과</div>
+          <div class="map"><img src="../4_결과/강남구_모형/05_공통_선정입지_p15_번호.png" alt=""></div>
+        </div>
+        <div class="col">
+          <div class="pill">세 모형 공통 6곳</div>
+          <div class="tally">
+            <span>세 모형 공통 <b class="best">6곳<svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M40 10 C95 0 175 4 192 32 C206 58 150 78 96 75 C42 72 6 60 8 38 C10 18 48 6 104 5"/></svg></b></span>
+            <span>두 모형 공통 <b>6곳</b></span>
+            <span>한 모형만 <b>15곳</b></span>
+          </div>
+          <div class="shots">
+            <figure><div class="ph"><span>로드뷰</span><img src="../4_결과/강남구_모형/거리뷰/1.jpg" alt="" onerror="this.remove()"><i>1</i></div><figcaption>청담 경로당<small>도산대로67길 15</small></figcaption></figure>
+            <figure><div class="ph"><span>로드뷰</span><img src="../4_결과/강남구_모형/거리뷰/2.jpg" alt="" onerror="this.remove()"><i>2</i></div><figcaption>강남상가아파트 경로당<small>압구정로2길 46, <em>4층 옥탑</em></small></figcaption></figure>
+            <figure><div class="ph"><span>로드뷰</span><img src="../4_결과/강남구_모형/거리뷰/3.jpg" alt="" onerror="this.remove()"><i>3</i></div><figcaption>롯데캐슬리베아파트 경로당<small>도곡로 404</small></figcaption></figure>
+            <figure><div class="ph"><span>로드뷰</span><img src="../4_결과/강남구_모형/거리뷰/4.jpg" alt="" onerror="this.remove()"><i>4</i></div><figcaption>동부센트레빌아파트 경로당<small>선릉로 206</small></figcaption></figure>
+            <figure><div class="ph"><span>로드뷰</span><img src="../4_결과/강남구_모형/거리뷰/5.jpg" alt="" onerror="this.remove()"><i>5</i></div><figcaption>대림아크로빌아파트 경로당<small>언주로30길 13</small></figcaption></figure>
+            <figure><div class="ph"><span>로드뷰</span><img src="../4_결과/강남구_모형/거리뷰/6.jpg" alt="" onerror="this.remove()"><i>6</i></div><figcaption>수서7단지아파트 경로당<small>광평로47길 17</small></figcaption></figure>
+          </div>
+          <div class="push"></div>
+          <div class="say">우선 검토 6곳, 출입 조건은 <span>현장 확인</span></div>
+        </div>
+      </div>
+      <div class="cond" style="margin-top:10px">신규 쉼터 15곳 기준, 세 모형의 선정 결과를 겹쳐 봄 / 사진: 카카오맵 로드뷰</div>
+    </div>
+  </section>
+
+  <!-- 21쪽 -->
+  <section class="slide">
+    <div class="bar"></div><h1 class="ttl">6-4. 신규 쉼터 수에 따른 세 모형의 지표</h1>
+    <div class="card">
+      <div class="cond">기존 쉼터 96곳 유지 · 신규 0~30곳(5곳 단위) · 보행거리 219m · 아래 값은 신규 30곳일 때</div>
+      <div class="cols">
+        <div class="col">
+          <div class="pill">커버율</div>
+          <div class="map"><img src="../4_결과/강남구_모형/01_신규쉼터수별_커버율.png" alt=""></div>
+          <div class="mt">
+            <span><i style="background:var(--blue)"></i>MCLP</span><b class="best">33.3%<em>+10.5%p</em><svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M36 12 C90 -1 178 6 193 34 C204 60 146 79 92 75 C38 71 4 57 9 36 C14 17 52 7 108 6"/></svg></b>
+            <span><i style="background:var(--orange)"></i>형평성 MCLP</span><b>32.7%<em>+9.9%p</em></b>
+            <span><i style="background:var(--aqua)"></i>p-median</span><b>31.6%<em>+8.8%p</em></b>
+          </div>
+          <div class="say">5곳부터 30곳까지 MCLP <span>항상 가장 높음</span></div>
+        </div>
+        <div class="col">
+          <div class="pill">평균 보행거리</div>
+          <div class="map"><img src="../4_결과/강남구_모형/02_신규쉼터수별_평균보행거리.png" alt=""></div>
+          <div class="mt">
+            <span><i style="background:var(--blue)"></i>MCLP</span><b>333m<em>−74m</em></b>
+            <span><i style="background:var(--orange)"></i>형평성 MCLP</span><b>336m<em>−71m</em></b>
+            <span><i style="background:var(--aqua)"></i>p-median</span><b class="best">322m<em>−85m</em><svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M40 10 C95 0 175 4 192 32 C206 58 150 78 96 75 C42 72 6 60 8 38 C10 18 48 6 104 5"/></svg></b>
+          </div>
+          <div class="say">p-median, 30곳이면 <span>85m 단축</span></div>
+        </div>
+        <div class="col">
+          <div class="pill">최저 동 커버율</div>
+          <div class="map"><img src="../4_결과/강남구_모형/03_신규쉼터수별_최저동커버율.png" alt=""></div>
+          <div class="mt">
+            <span><i style="background:var(--blue)"></i>MCLP</span><b>9.3%</b>
+            <span><i style="background:var(--orange)"></i>형평성 MCLP</span><b class="best">14.9%<svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M44 9 C100 0 180 8 194 35 C206 62 140 79 88 74 C36 70 3 55 10 35 C16 16 56 6 110 7"/></svg></b>
+            <span><i style="background:var(--aqua)"></i>p-median</span><b>7.7%</b>
+          </div>
+          <div class="say">형평성 MCLP, 15곳 이후 <span>14.9%에서 멈춤</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22쪽 -->
+  <section class="slide">
+    <div class="bar"></div><h1 class="ttl">6-4. 5곳씩 늘릴 때 추가 효과</h1>
+    <div class="card">
+      <div class="cond">신규 0~30곳, 5곳 단위 · 기존 배치 커버율 22.8%</div>
+      <div class="cols">
+        <div class="col wide">
+          <div class="pill">5곳 추가할 때 늘어나는 커버율</div>
+          <div class="map"><img src="../4_결과/강남구_모형/04_5곳당_커버율증가폭.png" alt=""></div>
+          <div class="mt" style="width:460px">
+            <span><i style="background:var(--blue)"></i>MCLP 0→5곳</span><b class="best">+4.1%p<svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M36 12 C90 -1 178 6 193 34 C204 60 146 79 92 75 C38 71 4 57 9 36 C14 17 52 7 108 6"/></svg></b>
+            <span><i style="background:var(--blue)"></i>MCLP 10→15곳</span><b>+1.4%p</b>
+            <span><i style="background:var(--blue)"></i>MCLP 25→30곳</span><b>+0.8%p</b>
+          </div>
+          <div class="say">첫 5곳의 효과가 25→30곳의 <span>약 5배</span></div>
+        </div>
+        <div class="col">
+          <div class="pill">앞 단계 선정지 유지</div>
+          <div class="keep">
+            <span class="h"></span><span class="h">5→10</span><span class="h">10→15</span><span class="h">15→20</span><span class="h">20→25</span><span class="h">25→30</span>
+            <span class="m"><i style="background:var(--blue)"></i>MCLP</span><b>5/5</b><b>10/10</b><b>15/15</b><b>20/20</b><b>25/25</b>
+            <span class="m"><i style="background:var(--orange)"></i>형평성 MCLP</span><b>5/5</b><b>10/10</b><b>15/15</b><b>20/20</b><b>25/25</b>
+            <span class="m"><i style="background:var(--aqua)"></i>p-median</span><b class="lo">4/5</b><b>10/10</b><b>15/15</b><b>20/20</b><b class="lo">24/25</b>
+          </div>
+          <div class="memo" style="margin-top:22px">
+            <p>예: MCLP 15/15는 신규 15곳일 때 고른 시설이 20곳으로 늘려도 15곳 모두 남는다는 뜻이다.</p>
+            <p>먼저 지정한 쉼터를 바꾸지 않고 규모를 늘릴 수 있다.</p>
+          </div>
+          <div class="push"></div>
+          <div class="say">앞 단계 선정지가 <span>거의 그대로 유지</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 23쪽 -->
+  <section class="slide">
+    <div class="bar"></div><h1 class="ttl">7. 시사점</h1>
+    <div class="card">
+      <div class="cols">
+        <div class="col">
+          <div class="pill">I 서울 전역으로 확장</div>
+          <div class="map"><img src="../4_결과/서울_네트워크/01_서울_보행네트워크.png" alt=""></div>
+          <div class="mt" style="width:520px">
+            <span>보행 구간 (서울 전역)</span><b>27.9만 개</b>
+            <span>무더위쉼터 / 후보시설</span><b>서울 전역 정리</b>
+            <span>적용 범위</span><b class="best">25개 구<svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M40 10 C95 0 175 4 192 32 C206 58 150 78 96 75 C42 72 6 60 8 38 C10 18 48 6 104 5"/></svg></b>
+          </div>
+          <div class="say">강남구와 같은 절차를 <span>다른 구에 그대로 적용</span></div>
+        </div>
+        <div class="col">
+          <div class="pill">II 보행거리·주말 개방 기준 평가</div>
+          <div class="duo">
+            <div class="blk"><div class="cap">쉼터 219m 안에 드는 길 (강남구)</div><img src="../4_결과/시사점/01_쉼터219m안의길_직선_보행.png" alt=""></div>
+            <div class="blk"><div class="cap">문을 여는 서울 무더위쉼터</div><img src="../4_결과/시사점/02_요일별_여는쉼터.png" alt=""></div>
+          </div>
+          <div class="mt" style="width:520px">
+            <span>걸어서 219m 안의 길</span><b class="best">18.0%<em>직선 36.1%</em><svg viewBox="0 0 200 80" preserveAspectRatio="none"><path d="M36 12 C90 -1 178 6 193 34 C204 60 146 79 92 75 C38 71 4 57 9 36 C14 17 52 7 108 6"/></svg></b>
+            <span>일요일에 여는 쉼터</span><b>23%<em>평일 99%</em></b>
+          </div>
+          <div class="say">직선거리, 평일 기준으로는 접근성을 <span>과대평가</span></div>
+        </div>
+      </div>
+      <div class="cond" style="margin-top:12px">보행·직선 비교: 강남구 보행 구간 길이 기준 / 요일: 서울 무더위쉼터 4,092곳, 기본·연장·추가 운영 요일 합산</div>
+    </div>
+  </section>
+
+</div>
+<script>
+const slides = [...document.querySelectorAll(".slide")];
+let cur = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1)) || 1) - 1));
+function show(i) { slides.forEach((s, k) => s.classList.toggle("on", k === i)); cur = i; }
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  document.getElementById("stage").style.transform = `translate(-50%, -50%) scale(${s})`;
+}
+addEventListener("keydown", e => {
+  if (e.key === "ArrowRight" || e.key === " ") show(Math.min(cur + 1, slides.length - 1));
+  if (e.key === "ArrowLeft") show(Math.max(cur - 1, 0));
+});
+addEventListener("click", () => show((cur + 1) % slides.length));
+addEventListener("resize", fit); fit(); show(cur);
+</script>
+</body>
+</html>

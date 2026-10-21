@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>p-median 모형</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+/* 1920x1080 캔버스. 배경, 제목, 카드는 무더위쉼터_현황.html과 같고 카드 안 배치만 다르다 */
+:root {
+  --main: #223a65;
+  --title: #2a2d33;
+  --ink: #26282c;
+  --sub: #5d6676;
+  --muted: #8a93a3;
+  --line: #9aa6bb;
+  --b2: #3d86e6;
+  --tint: #eef3fa;
+  --src: #5d7290;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #2b2a28; overflow: hidden; }
+body { font-family: "Pretendard", "Malgun Gothic", sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+sub { font-size: 0.6em; }
+
+.stage { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: center; }
+.slide {
+  position: absolute; inset: 0; overflow: hidden;
+  background:
+    radial-gradient(1350px 780px at 8% 0%, #ffffff 0%, rgba(255,255,255,0) 70%),
+    radial-gradient(1050px 900px at 100% 100%, #8ec5f4 0%, rgba(142,197,244,0) 70%),
+    linear-gradient(120deg, #f4f9ff 0%, #dcecfc 45%, #b4d8f8 100%);
+}
+
+.bar-title { position: absolute; left: 141px; top: 81px; width: 10px; height: 69px; background: var(--main); }
+.head { position: absolute; left: 174px; top: 75px; display: flex; align-items: baseline; gap: 21px; }
+.head h1 { margin: 0; font-size: 60px; font-weight: 800; letter-spacing: -0.02em; color: var(--title); }
+.head span { font-size: 27px; font-weight: 600; color: var(--sub); }
+
+.card {
+  position: absolute; left: 138px; top: 195px; width: 1644px; height: 771px;
+  background: rgba(255, 255, 255, 0.86);
+  border-radius: 42px;
+  box-shadow: 0 15px 60px rgba(34, 58, 101, 0.12);
+}
+
+.lab { font-size: 25.5px; font-weight: 600; color: var(--sub); }
+
+/* 목적함수: 항마다 아래에 풀이를 단다 */
+.obj { position: absolute; left: 216px; top: 252px; width: 1488px; }
+.eq { display: flex; justify-content: center; align-items: flex-start; margin-top: 18px; color: var(--main); }
+.eq .op { font-size: 60px; font-weight: 700; line-height: 84px; padding: 0 6px; }
+.eq .term { display: flex; flex-direction: column; align-items: center; }
+.eq .term .f { font-size: 60px; font-weight: 700; line-height: 84px; white-space: nowrap; }
+.eq .term .tick { width: 78%; height: 16px; margin-top: 6px; border: 3px solid var(--b2); border-top: 0; border-radius: 0 0 6px 6px; }
+.eq .term .k { margin-top: 18px; font-size: 27px; font-weight: 700; color: var(--main); }
+.eq .term .d { margin-top: 6px; font-size: 22.5px; color: var(--sub); text-align: center; line-height: 1.45; }
+
+/* 제약조건 한 줄 */
+.cons {
+  position: absolute; left: 216px; top: 585px; width: 1488px;
+  display: grid; grid-template-columns: 150px repeat(3, 1fr); align-items: center;
+  padding: 24px 0; border-top: 2px solid var(--line); border-bottom: 2px solid var(--line);
+}
+.cons .c { display: flex; align-items: baseline; gap: 18px; }
+.cons .c b { font-size: 30px; font-weight: 700; color: var(--main); white-space: nowrap; }
+.cons .c span { font-size: 22.5px; color: var(--sub); }
+
+/* 아래 설명 두 칸 */
+.notes { position: absolute; left: 216px; top: 723px; width: 1488px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+.note { background: var(--tint); border-radius: 24px; padding: 27px 36px 30px; }
+.note h2 { margin: 0 0 10px; font-size: 30px; font-weight: 700; color: var(--main); }
+.note p { margin: 0; font-size: 24px; line-height: 1.6; color: var(--sub); word-break: keep-all; }
+.note p strong { color: var(--main); font-weight: 700; }
+
+.src { position: absolute; left: 138px; top: 1005px; font-size: 18px; color: var(--src); }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <section class="slide">
+    <div class="bar-title"></div>
+    <div class="head"><h1>p-median 모형</h1><span>가중 보행거리 최소화</span></div>
+
+    <div class="card"></div>
+
+    <div class="obj">
+      <div class="lab">목적함수</div>
+      <div class="eq">
+        <span class="op">min</span>
+        <div class="term" style="width:290px">
+          <span class="f">Σ<sub>i</sub> w<sub>i</sub></span><span class="tick"></span>
+          <span class="k">고령 유동인구 가중치</span>
+          <span class="d">50m 격자 i의 60대 이상<br>유동인구, 모든 격자를 합산</span>
+        </div>
+        <span class="op">[</span>
+        <div class="term" style="width:320px">
+          <span class="f">e<sub>i</sub>u<sub>i</sub></span><span class="tick"></span>
+          <span class="k">기존 쉼터로 갈 때</span>
+          <span class="d">가장 가까운 기존 쉼터까지<br>보행거리</span>
+        </div>
+        <span class="op">+</span>
+        <div class="term" style="width:320px">
+          <span class="f">Σ<sub>j</sub> D<sub>ij</sub>v<sub>ij</sub></span><span class="tick"></span>
+          <span class="k">새 쉼터로 갈 때</span>
+          <span class="d">새로 지정한 후보시설 j까지<br>보행거리</span>
+        </div>
+        <span class="op">]</span>
+      </div>
+    </div>
+
+    <div class="cons">
+      <div class="lab">제약조건</div>
+      <div class="c"><b>u<sub>i</sub> + Σ<sub>j</sub> v<sub>ij</sub> = 1</b><span>격자마다 한 곳에 배정</span></div>
+      <div class="c"><b>v<sub>ij</sub> ≤ x<sub>j</sub></b><span>지정한 후보로만 배정</span></div>
+      <div class="c"><b>Σ<sub>j</sub> x<sub>j</sub> = p</b><span>후보 148곳 중 p곳 추가</span></div>
+    </div>
+
+    <div class="notes">
+      <div class="note">
+        <h2>가중치 효과</h2>
+        <p>같은 100m를 줄여도 유동인구가 많은 격자에서 줄이면 목적함수가 더 크게 준다. 어르신이 많이 다니는 곳 근처의 후보가 먼저 뽑힌다.</p>
+      </div>
+      <div class="note">
+        <h2>MCLP와 차이</h2>
+        <p><strong>219m 기준이 없다.</strong> 기존 쉼터 96곳에서 먼 격자의 거리도 줄여 주지만, 219m 안에 드는 인원을 늘리는 게 목표는 아니다.</p>
+      </div>
+    </div>
+
+    <div class="src">보행거리: 강남구 보행 네트워크 최단거리 / 기존 쉼터 96곳은 유지 / 계산 단순화: 기존 쉼터보다 가까운 후보만 배정 변수로 둠</div>
+  </section>
+</div>
+<script>
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  document.getElementById("stage").style.transform = `translate(-50%, -50%) scale(${s})`;
+}
+addEventListener("resize", fit); fit();
+</script>
+</body>
+</html>
