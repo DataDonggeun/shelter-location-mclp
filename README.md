@@ -48,7 +48,7 @@ shelter-location-mclp/
 | 위치 | 노트북 | 상태 |
 |---|---|---|
 | 최상위 | Seoul.ipynb | 서울 전체 입지모형. 현재 작업본 |
-| 3_분석/ | seoul_candidates, seoul_eda | 서울 후보시설 전처리, 서울 EDA |
+| 3_분석/ | seoul_candidates, seoul_eda, seoul_eda_resident | 서울 후보시설 전처리, 서울 EDA(유동인구), 서울 EDA(고령 거주인구) |
 | 금천구/분석/ | shelter, banks, facilities, eda_district_selection | 금천구 전처리와 대상지 선정 EDA |
 | 금천구/분석/ | 금천구무더위쉼터입지분석3가지 | 금천구 입지모형 최종본. Seoul.ipynb의 바탕 |
 | 금천구/DONGGEUN/ | GeumcheonHeatShelterLocation_v2 | 금천구 2모형. 같은 폴더의 자료를 읽는다 |
@@ -70,28 +70,41 @@ shelter-location-mclp/
 
 ### 2_데이터/원본
 
+서울 전체 분석에 쓰는 원자료다. 아직 확보하지 않은 자료와 접근 경로는 [03_데이터출처목록.md](1_기획문서/03_데이터출처목록.md)에 있다.
+
 | 파일 | 출처 | 비고 |
 |---|---|---|
-| 서울시_무더위쉼터.csv | 서울 열린데이터광장 OA-21065 | cp949, 4,092행. 시설년도 2026 |
-| 서울시_공공도서관_현황정보.csv | 서울 열린데이터광장 | cp949, 위도ㆍ경도 포함 |
-| (서울시경로당)현황3644(25.6월말_기준)(2.csv | 서울시 | utf-8-sig, 위 4줄은 제목이라 건너뜀 |
-| 소상공인시장진흥공단_상가(상권)정보_서울_202606.csv | 소상공인시장진흥공단 | utf-8-sig, 554,092행. 302MB라 git에서 제외 |
-| 서울시 경로당 정보.csv | 서울시 | seoul_candidates 입력 |
-| 전국도서관표준데이터.csv | 공공데이터포털 | seoul_candidates 입력 |
-| 행정안전부_읍면동 하부행정기관 현황_20251231.csv | 행정안전부 | seoul_candidates 입력. 주민센터 |
-| 보건복지부_전국 지역보건의료기관 현황_20251231.csv | 보건복지부 | seoul_candidates 입력. 보건소 |
+| 서울시_무더위쉼터.csv | 서울 열린데이터광장, [서울시 무더위쉼터](https://data.seoul.go.kr/dataList/OA-21065/A/1/datasetView.do) (OA-21065) | cp949, 4,092행. 시설년도 2026 |
+| 서울시 경로당 정보.csv | 서울 열린데이터광장, [서울시 경로당 현황](https://data.seoul.go.kr/dataList/OA-15052/A/1/datasetView.do) (OA-15052)로 추정. 행 수 3,644가 일치 | cp949, 3,644행. 좌표 없음. seoul_candidates 입력 |
+| 전국도서관표준데이터.csv | 공공데이터포털, [전국도서관표준데이터](https://www.data.go.kr/data/15013109/standard.do) | cp949, 전국 3,601행. 위도ㆍ경도 포함. seoul_candidates 입력 |
+| 행정안전부_읍면동 하부행정기관 현황_20251231.csv | 공공데이터포털, [행정안전부_읍면동 하부행정기관 현황](https://www.data.go.kr/data/15059715/fileData.do) | utf-8-sig, 전국 3,556행. 주민센터 주소. 2025.12.31 기준. seoul_candidates 입력 |
+| 보건복지부_전국 지역보건의료기관 현황_20251231.csv | 공공데이터포털, [보건복지부_전국 지역보건의료기관 현황](https://www.data.go.kr/data/3072692/fileData.do) | cp949, 전국 3,607행. 보건소 주소. 2025.12.31 기준. seoul_candidates 입력 |
+| 행정안전부_지역별(행정동) 성별 연령별 주민등록 인구수_20260930.csv | 공공데이터포털, [행정안전부_지역별(행정동) 성별 연령별 주민등록 인구수](https://www.data.go.kr/data/15097972/fileData.do) | cp949, 전국 3,619행. 한 살 단위. seoul_eda_resident 입력 |
+| HangJeongDong_ver20260701.geojson | [vuski/admdongkor](https://github.com/vuski/admdongkor). SGIS 행정동 경계를 보정한 것 | EPSG:4326, 전국 행정동. 서울 427개가 인구 파일의 행정기관코드와 모두 맞는다. seoul_eda_resident 입력 |
+
+금천구 분석에만 쓴 원자료는 `금천구/원본/`으로 옮겼다.
+
+| 파일 | 출처 | 비고 |
+|---|---|---|
+| 서울시_공공도서관_현황정보.csv | 서울 열린데이터광장, [서울시 공공도서관 현황정보](https://data.seoul.go.kr/dataList/OA-15480/S/1/datasetView.do) (OA-15480) | cp949, 위도ㆍ경도 포함 |
+| (서울시경로당)현황3644(25.6월말_기준)(2.csv | 서울 열린데이터광장, [서울시 경로당 현황](https://data.seoul.go.kr/dataList/OA-15052/A/1/datasetView.do) (OA-15052) | utf-8-sig, 위 4줄은 제목이라 건너뜀. 2025년 6월 말 기준 |
+| 소상공인시장진흥공단_상가(상권)정보_서울_202606.csv | 공공데이터포털, [소상공인시장진흥공단_상가(상권)정보](https://www.data.go.kr/data/15083033/fileData.do) | utf-8-sig, 554,092행. 302MB라 git에서 제외 |
 
 ### 2_데이터/모형입력
 
 `Seoul.ipynb`의 `BASE_DIR`이 이 폴더를 가리킨다. 노트북은 저장소 최상위를 작업 디렉터리로 두고 실행한다.
 
-| 파일 | 내용 | 비고 |
-|---|---|---|
-| SeoulNetwork.csv | 서울 전체 보행 네트워크. 491,082행 | 112MB라 git에서 제외 |
-| SeoulBoundary.shp (.shx, .dbf, .prj, .cpg) | 자치구 경계 25개. EPSG:5179 | 다섯 파일이 한 벌 |
-| SeoulCoolingCenter.csv | 기존 무더위쉼터 4,092개 | |
-| SeoulCandidateFacility.csv | 신규 후보시설 1,161행 | |
-| Seoul_Test_Population.csv | 연습용 인구 격자 824,637행 | 120MB라 git에서 제외. 안심구역 유동인구가 아니다 |
+| 파일 | 내용 | 출처 | 비고 |
+|---|---|---|---|
+| SeoulNetwork.csv | 서울 전체 보행 네트워크. 491,082행 | 서울 열린데이터광장, [서울시 자치구별 도보 네트워크 공간정보](https://data.seoul.go.kr/dataList/OA-21208/S/1/datasetView.do) (OA-21208) | 112MB라 git에서 제외 |
+| SeoulBoundary.shp (.shx, .dbf, .prj, .cpg) | 자치구 경계 25개. EPSG:5179 | [SGIS 통계지리정보서비스](https://sgis.mods.go.kr/view/pss/downloadList), 국가데이터처 | 다섯 파일이 한 벌 |
+| SeoulCoolingCenter.csv | 기존 무더위쉼터 4,092개 | `원본/서울시_무더위쉼터.csv`와 같은 자료. 행 순서만 다르다 | |
+| SeoulCandidateFacility.csv | 신규 후보시설 1,161행 | seoul_candidates가 만든 `가공/서울시_후보시설_기존쉼터제외.csv` | 좌표는 ArcGIS 969건, 전국도서관표준데이터 173건, Nominatim 1건. 행마다 `좌표출처` 열에 남아 있다 |
+| Seoul_Test_Population.csv | 연습용 인구 격자 824,637행 | 확인 필요 | 120MB라 git에서 제외. 안심구역 유동인구가 아니다 |
+
+### 2_데이터/모의
+
+[make_mock_flow_population.py](3_분석/make_mock_flow_population.py)가 만든 난수 자료다. 열 이름, 좌표계, 행 수는 데이터안심구역에서 제공하는 한국데이터산업진흥원의 50m 격자 유동인구(`TB_CKDATA_FLOATING_POPULATION_GENDER_AGE_DAY_TIME`)에 맞췄다. 실제 유동인구는 안심구역 밖으로 반출할 수 없어서 로컬 개발에는 이 자료를 쓴다. git에서 제외되어 있으므로 스크립트로 다시 만든다.
 
 ### 2_데이터/가공 (서울 전체)
 
@@ -124,7 +137,7 @@ shelter-location-mclp/
    금천구를 대상지로 고른 근거를 만든다. 서울 25개 자치구의 쉼터 수, 폭염 피크 및 주말 개방률, 경로당과 도서관 수, 사업체 수와 업종 구성을 비교하고, 금천구 안에서는 법정동별로 활동 규모와 쉼터 공급을 대조한다. 도판은 `4_결과/대상지선정_EDA/`에 저장된다. 자치구별 고령인구 파일이 있으면 인구 대비 지표까지 계산한다.
 
 5. [seoul_eda.ipynb](3_분석/seoul_eda.ipynb)
-   서울 전체 EDA다. 자치구별 쉼터 수와 60대 이상 유동인구, 격자 지도, 사각지대 지도, 거리 분포와 커버율, 시간대ㆍ요일별 유동인구와 쉼터 운영, 쉼터 유형, 후보시설 현황을 그린다. 도판은 `4_결과/서울_EDA/`에 저장된다. 지금 저장된 출력은 `2_데이터/모의/`의 모의 유동인구로 그린 것이라 해석하면 안 된다. 안심구역에서는 `FLOW_DIR`과 `STD_YM`만 바꿔 실행한다. 거리는 직선거리다.
+   서울 전체 EDA다. 자치구별 쉼터 수와 60대 이상 유동인구, 격자 지도, 사각지대 지도, 거리 분포와 커버율, 시간대ㆍ요일별 유동인구와 쉼터 운영, 쉼터 유형, 후보시설 현황을 그린다. 도판은 `4_결과/서울_EDA/`에 저장된다. 지금 저장된 출력은 `2_데이터/모의/`의 모의 유동인구로 그린 것이라 해석하면 안 된다. 안심구역에서는 설정 셀의 `SAFE_ZONE`을 `True`로 바꾸고 경로와 `STD_YM`을 확인해 실행한다. 거리는 직선거리다.
 
 실행 순서는 shelter, banks, facilities, eda다. facilities가 앞의 두 노트북이 만든 `금천구_무더위쉼터.csv`와 `금천구_은행.csv`를 읽고, eda가 `금천구_후보시설.csv`를 읽는다.
 

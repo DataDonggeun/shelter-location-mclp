@@ -1,0 +1,14 @@
+﻿candidate_id,시설명,시설유형,MCLP,형평성 MCLP,p-median,모형수
+C043,디에이치아너힐즈 노블라운지,경로당,True,False,True,2
+C113,청담래미안로이뷰아파트,경로당,True,True,False,2
+C006,강남 더샵 시니어하우스,경로당,True,False,False,1
+C008,강남상가아파트,경로당,False,True,False,1
+C034,대치현대아파트,경로당,False,True,False,1
+C054,래미안포레아파트,경로당,False,False,True,1
+C065,미성2차아파트,경로당,False,True,False,1
+C072,선경아파트,경로당,False,True,False,1
+C086,쌍용제1차아파트,경로당,False,False,True,1
+C115,청담삼성진흥아파트,경로당,True,False,False,1
+C117,청담자이아파트,경로당,False,False,True,1
+C119,청솔빌리지,경로당,True,False,False,1
+C145,개포래미안포레스트아파트,경로당,False,False,True,1
