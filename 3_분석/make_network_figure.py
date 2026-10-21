@@ -1,7 +1,7 @@
 """강남구 보행 네트워크에서 직선 219m와 보행 219m 커버 범위를 비교하는 지도.
 
 유동인구는 쓰지 않는다. 보행 네트워크, 기존 쉼터, 행정동 경계만 쓰므로 로컬에서 실행된다.
-그래프 구성과 스냅은 GangnamAnalysis.ipynb 2절과 같다. 색과 형식은 seoul_eda.ipynb를 따른다.
+그래프 구성과 스냅은 GangnamAnalysis.ipynb 2절과 같다. 색과 형식은 서울_EDA.ipynb를 따른다.
 
 링크 색
 - 파랑: 가장 가까운 쉼터까지 보행거리 219m 이내
@@ -37,7 +37,7 @@ plt.rcParams.update({"figure.facecolor": SURFACE, "axes.facecolor": SURFACE, "sa
                      "text.color": INK})
 
 ROOT = next(p for p in [Path.cwd(), *Path.cwd().parents] if (p / "2_데이터").exists())
-INPUT = ROOT / "2_데이터" / "강남구_반입"
+INPUT = ROOT / "2_데이터" / "강남구_모형입력"
 OUT = ROOT / "4_결과" / "강남구_네트워크"
 OUT.mkdir(parents=True, exist_ok=True)
 T = 219

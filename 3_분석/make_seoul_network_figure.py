@@ -1,7 +1,7 @@
 """서울 전역 보행 네트워크 지도. 강남구 구간만 파랑으로 칠해 '같은 틀을 다른 구로 넓힐 수 있다'를 보여 준다. 발표 시사점 장에 쓴다.
 
 유동인구는 쓰지 않는다. 보행 네트워크와 자치구 경계(공개 자료)만 쓰므로 로컬에서 실행된다.
-색과 형식은 seoul_eda.ipynb를 따른다.
+색과 형식은 서울_EDA.ipynb를 따른다.
 """
 from pathlib import Path
 
@@ -27,7 +27,7 @@ plt.rcParams.update({"figure.facecolor": SURFACE, "axes.facecolor": SURFACE, "sa
                      "text.color": INK})
 
 ROOT = next(p for p in [Path.cwd(), *Path.cwd().parents] if (p / "2_데이터").exists())
-INPUT = ROOT / "2_데이터" / "모형입력"
+INPUT = ROOT / "2_데이터" / "서울_모형입력"
 OUT = ROOT / "4_결과" / "서울_네트워크"
 OUT.mkdir(parents=True, exist_ok=True)
 TARGET = "강남구"

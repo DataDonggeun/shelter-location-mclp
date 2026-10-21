@@ -2,7 +2,7 @@
 
 입력은 안심구역에서 반출한 모형별 지표 집계표와 선정 후보지 목록뿐이다(격자 행 없음).
 반출 그림(05~07)은 0~40곳을 1곳 단위로 그렸다. 발표본은 0~30곳, 5곳 단위로 맞춘다.
-색과 형식은 seoul_eda.ipynb를 따른다. 모형 색은 MCLP 파랑, 형평성 MCLP 주황, p-median 청록.
+색과 형식은 서울_EDA.ipynb를 따른다. 모형 색은 MCLP 파랑, 형평성 MCLP 주황, p-median 청록.
 """
 from pathlib import Path
 

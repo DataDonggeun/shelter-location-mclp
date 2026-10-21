@@ -4,7 +4,7 @@
 열 이름, 좌표계(EPSG:5179, 50m 격자), 행 수만 실제와 맞추고 값은 전부 난수다.
 분석 결과로 쓰면 안 된다.
 
-만드는 파일 (2_데이터/모의/, 월마다 한 벌):
+만드는 파일 (2_데이터/모의_유동인구/, 월마다 한 벌):
     seoul_flow_age_YYYYMM.csv     성별ㆍ연령대   217,630행  구분자 |
     seoul_flow_time_YYYYMM.csv    시간대         217,432행  구분자 |
     seoul_flow_day_YYYYMM.csv     요일           217,630행  구분자 |
@@ -23,7 +23,7 @@ from scipy.spatial import cKDTree
 ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "2_데이터" / "원본"
 PROC = ROOT / "2_데이터" / "가공"
-OUT = ROOT / "2_데이터" / "모의"
+OUT = ROOT / "2_데이터" / "모의_유동인구"
 
 MONTHS = [202401, 202412]
 N_AGE, N_TIME, N_DAY = 217_630, 217_432, 217_630

@@ -1,6 +1,6 @@
 """강남구 행정동 경계 지도(02)와 행정동별 기존 무더위쉼터 수 지도(01).
 
-공개 자료만 쓴다(행정동 경계, 기존 쉼터 위치). 색과 형식은 seoul_eda.ipynb를 따르고 제목은 넣지 않는다.
+공개 자료만 쓴다(행정동 경계, 기존 쉼터 위치). 색과 형식은 서울_EDA.ipynb를 따르고 제목은 넣지 않는다.
 """
 from pathlib import Path
 
@@ -26,7 +26,7 @@ plt.rcParams.update({"figure.facecolor": SURFACE, "axes.facecolor": SURFACE, "sa
                      "text.color": INK})
 
 ROOT = next(p for p in [Path.cwd(), *Path.cwd().parents] if (p / "2_데이터").exists())
-INPUT = ROOT / "2_데이터" / "강남구_반입"
+INPUT = ROOT / "2_데이터" / "강남구_모형입력"
 OUT = ROOT / "4_결과" / "강남구_행정동"
 OUT.mkdir(parents=True, exist_ok=True)
 
